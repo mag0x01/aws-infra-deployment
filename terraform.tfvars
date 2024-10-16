@@ -1,0 +1,5 @@
+bucket_name = "dev-s3"
+app_name    = "my-python-app"
+ami_id      = "ami-0866a3c8686eaeeba"
+instance_type = "t2.micro"
+region      = "ap-northeast-1"
