@@ -6,9 +6,9 @@ terraform {
     }
   }
   backend "s3" {
-  bucket         = var.bucket_name.name
+  bucket         = "dev-py-s3"
   key            = "terraform/state.tfstate"
-  region         = var.region
+  region         = "ap-northeast-1"
   encrypt        = true
   }
 }
