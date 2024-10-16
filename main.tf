@@ -5,11 +5,17 @@ terraform {
       version = "5.72.0"
     }
   }
+  backend "s3" {
+  bucket         = var.bucket_name.name
+  key            = "terraform/state.tfstate"
+  region         = var.region
+  encrypt        = true
+  }
 }
 
 provider "aws" {
-  region = var.region
-  access_key   = var.aws_access_key_id
+  region      = var.region
+  access_key  = var.aws_access_key_id
   secret_key  = var.aws_secret_access_key
 }
 
@@ -17,10 +23,10 @@ resource "aws_s3_bucket" "app_bucket" {
   bucket = var.bucket_name
 }
 
-resource "aws_s3_bucket_acl" "aws_s3_bucket_acl" {
-  bucket = aws_s3_bucket.app_bucket.id
-  acl   = "private"
-}
+# resource "aws_s3_bucket_acl" "aws_s3_bucket_acl" {
+#   bucket = aws_s3_bucket.app_bucket.id
+#   acl   = "private"
+# }
 
 resource "aws_security_group" "ec2_sg" {
   name        = "${var.app_name}-sg"
