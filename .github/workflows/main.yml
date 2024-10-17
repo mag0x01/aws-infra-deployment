@@ -38,6 +38,25 @@ jobs:
         with:
           terraform_version: 1.4.6
 
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Run Checkov Scan
+        run: checkov -d . -o json --output-file-path checkov-report.json
+
+      - name: Convert Checkov Report to HTML
+        run: |
+          pip install checkov-report-converter
+          checkov-report-converter --input checkov-report.json --format html --output checkov-report.html
+
+      - name: Upload Checkov Report to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws s3 cp checkov-report.html s3://${{ secrets.AWS_BUCKET_NAME }}/checkov_report/checkov-report.html --region $AWS_REGION
+
       - name: Terraform Init
         env:
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
