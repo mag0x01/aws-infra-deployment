@@ -42,7 +42,9 @@ jobs:
         run: pip install checkov
 
       - name: Run Checkov Scan
-        run: checkov -d . -o json --output-file-path checkov-report.json
+        id: checkov
+        run: |
+          checkov -d . -o json --output-file-path checkov-report.json || echo "CHECKOV_FAILED=true" >> $GITHUB_ENV
 
       - name: Convert Checkov Report to HTML
         run: |
@@ -65,16 +67,15 @@ jobs:
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate 
+        run: terraform validate
 
       - name: Terraform Plan
         id: plan
+        if: ${{ (github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.terraform_action == 'plan')) && env.CHECKOV_FAILED != 'true' }}
         run: terraform plan -var "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-        if: (github.event_name == 'pull_request') || (github.event_name == 'workflow_dispatch' && github.event.inputs.terraform_action == 'plan')
-        continue-on-error: true
 
       - name: Terraform Apply
-        if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && github.event.inputs.terraform_action == 'apply')
+        if: ${{ (github.ref == 'refs/heads/main' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && github.event.inputs.terraform_action == 'apply') && env.CHECKOV_FAILED != 'true' }}
         run: terraform apply -auto-approve -input=false -var "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
 
       - name: Terraform Destroy
