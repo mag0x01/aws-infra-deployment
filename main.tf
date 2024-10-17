@@ -5,12 +5,6 @@ terraform {
       version = "5.72.0"
     }
   }
-  backend "s3" {
-  bucket         = "dev-py-s3"
-  key            = "terraform/state.tfstate"
-  region         = "ap-northeast-1"
-  encrypt        = true
-  }
 }
 
 provider "aws" {
