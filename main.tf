@@ -8,10 +8,10 @@ resource "aws_s3_bucket" "app_bucket" {
   bucket = var.bucket_name
 }
 
-# resource "aws_s3_bucket_acl" "aws_s3_bucket_acl" {
-#   bucket = aws_s3_bucket.app_bucket.id
-#   acl   = "private"
-# }
+resource "aws_s3_bucket_acl" "aws_s3_bucket_acl" {
+  bucket = aws_s3_bucket.app_bucket.id
+  acl   = "private"
+}
 
 resource "aws_security_group" "ec2_sg" {
   name        = "${var.app_name}-sg"
@@ -28,7 +28,7 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["193.33.93.43/32"]
+    cidr_blocks = ["185.198.44.208/32"]
   }
 
   egress {
@@ -39,6 +39,7 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
+#IAM Role for EC2 to access S3
 resource "aws_iam_role" "ec2_role" {
   name = "${var.app_name}-role"
 
@@ -54,6 +55,7 @@ resource "aws_iam_role" "ec2_role" {
     }]
   })
 }
+
 
 resource "aws_iam_role_policy" "ec2_policy" {
   name = "${var.app_name}-policy"
