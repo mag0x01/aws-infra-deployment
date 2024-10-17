@@ -1,5 +1,5 @@
 bucket_name = "dev-py-s3"
-app_name    = "my-web-app"
+app_name    = "python-web-app"
 ami_id      = "ami-0866a3c8686eaeeba"
 instance_type = "t2.micro"
 region      = "ap-southeast-1"

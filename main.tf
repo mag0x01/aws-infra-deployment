@@ -8,11 +8,6 @@ resource "aws_s3_bucket" "app_bucket" {
   bucket = var.bucket_name
 }
 
-resource "aws_s3_bucket_acl" "aws_s3_bucket_acl" {
-  bucket = aws_s3_bucket.app_bucket.id
-  acl   = "private"
-}
-
 resource "aws_security_group" "ec2_sg" {
   name        = "${var.app_name}-sg"
   description = "Allow HTTP and SSH traffic"
