@@ -44,7 +44,7 @@ jobs:
       - name: Run Checkov Scan
         id: checkov
         run: |
-          checkov -d . -o html --output-file-path checkov-report.html || echo "CHECKOV_FAILED=true" >> $GITHUB_ENV
+          checkov -d . -o html --output-file-path checkov-report || echo "CHECKOV_FAILED=true" >> $GITHUB_ENV
 
       - name: Upload Checkov Report to S3
         env:
