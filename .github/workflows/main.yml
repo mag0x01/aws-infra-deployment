@@ -44,7 +44,7 @@ jobs:
       - name: Run Checkov Scan
         id: checkov
         run: |
-          checkov -d . -o json --output-file-path checkov-report.json || echo "CHECKOV_FAILED=true" >> $GITHUB_ENV
+          checkov -d . -o json --output-file-path . || echo "CHECKOV_FAILED=true" >> $GITHUB_ENV
 
       - name: Upload Checkov Report to S3
         env:
@@ -52,7 +52,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          aws s3 cp checkov-report.json s3://dev-py-s3/checkov_report/checkov-report.json --region $AWS_REGION
+          aws s3 cp results_json.json s3://dev-py-s3/checkov_report/results_json.json --region $AWS_REGION
 
 
       - name: Terraform Init
