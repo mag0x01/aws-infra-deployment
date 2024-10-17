@@ -44,12 +44,7 @@ jobs:
       - name: Run Checkov Scan
         id: checkov
         run: |
-          checkov -d . -o json --output-file-path checkov-report.json || echo "CHECKOV_FAILED=true" >> $GITHUB_ENV
-
-      - name: Convert Checkov Report to HTML
-        run: |
-          pip install checkov-report-converter
-          checkov-report-converter --input checkov-report.json --format html --output checkov-report.html
+          checkov -d . -o html --output-file-path checkov-report.html || echo "CHECKOV_FAILED=true" >> $GITHUB_ENV
 
       - name: Upload Checkov Report to S3
         env:
