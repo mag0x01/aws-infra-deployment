@@ -86,6 +86,18 @@ resource "aws_instance" "app_instance" {
   tags = {
     Name = var.app_name
   }
+    user_data = <<-EOF
+              #!/bin/bash
+              # Install necessary packages
+              sudo yum update -y
+              sudo yum install -y git
+              mkdir actions-runner && cd actions-runner
+              curl -o actions-runner-linux-x64-2.320.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.320.0/actions-runner-linux-x64-2.320.0.tar.gz
+              tar xzf ./actions-runner-linux-x64-2.320.0.tar.gz
+              ./config.sh --url https://github.com/mag0x01/aws-app-deploy --token AOAQHUMVMHYPW43XM6YE7HTHCJ6CW
+              sudo ./svc.sh install
+              sudo ./svc.sh start
+              EOF
 }
 
 resource "aws_iam_instance_profile" "ec2_profile" {
