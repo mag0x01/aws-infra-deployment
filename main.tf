@@ -6,6 +6,7 @@ provider "aws" {
 
 resource "aws_s3_bucket" "app_bucket" {
   bucket = var.bucket_name
+  force_destroy = true
 }
 
 resource "aws_security_group" "ec2_sg" {
